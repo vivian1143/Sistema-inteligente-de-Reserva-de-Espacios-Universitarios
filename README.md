@@ -1,0 +1,2 @@
+# Sistema-inteligente-de-Reserva-de-Espacios-Universitarios
+La falta de control en la reserva de espacios universitarios provoca salones desaprovechados por inasistencias, mientras otros estudiantes los necesitan. Se propone una plataforma web inteligente que permita consultar y reservar espacios mediante IA, interpretando solicitudes en lenguaje natural y gestionando reservas según la disponibilidad real.
