@@ -1,102 +1,140 @@
-# Sistema Inteligente de Reserva de Espacios Universitarios
+# Proyecto: Sistema Inteligente de Reserva de Espacios Universitarios
 
-## 📌 Descripción
+## 1. El Problema Real
 
-Este proyecto busca solucionar el problema del mal uso de los espacios universitarios. Muchas veces se reservan salones o salas y los usuarios no asisten, haciendo que estos espacios queden disponibles pero no puedan ser utilizados por otras personas.
+Los profesores y tutores reservan salas o salones y en muchas ocasiones no asisten, desaprovechando el espacio de estudio. De este modo, privan de su uso a los demás compañeros que realmente lo necesitan.
 
-La idea es desarrollar una plataforma web que permita consultar y reservar espacios de una manera más sencilla, utilizando un asistente de inteligencia artificial.
+### El problema
 
-## 💡 ¿Cómo funciona?
-
-El usuario podrá escribir una solicitud normal, por ejemplo:
-
-> "Necesito un espacio para estudiar con tres compañeros mañana a las 4 de la tarde."
-
-La IA se encargará de identificar datos como:
-
-* Fecha
-* Hora
-* Cantidad de personas
-* Tipo de espacio
-* Recursos necesarios
-
-Después, el backend consulta la base de datos para verificar qué espacios están realmente disponibles y le muestra las opciones al usuario.
-
-La IA **no decide la disponibilidad**, simplemente interpreta la solicitud y se comunica con el sistema de reservas.
-
-## 🤖 Ejemplo
-
-**Usuario:**
-
-> Quiero un espacio mañana a las 3 para estudiar con dos personas.
-
-**Asistente:**
-
-> Encontré dos espacios disponibles. ¿Cuál deseas reservar?
-
-El usuario selecciona uno y el sistema registra la reserva. Después se envía un correo de confirmación.
-
-## 🏗️ Arquitectura
-
-El proyecto estará dividido principalmente en:
-
-### Servicio Web
-
-Se encargará de:
-
-* Página web
-* Inicio de sesión
-* Reservas
-* Consulta de espacios
-* Comunicación con la IA
-* Comunicación con la base de datos
-
-### Servicio de Notificaciones
-
-Se encargará de:
-
-* Correos de confirmación
-* Recordatorios
-* Cancelaciones
-
-## ☁️ Infraestructura
-
-El sistema estará desplegado en la nube y se tendrán en cuenta aspectos como:
-
-* HTTPS / SSL
-* Control de acceso
-* Firewall
-* Variables de entorno
-* Protección de la base de datos
-* Balanceo de carga
-* Escalabilidad
-* GitHub Actions para despliegues
-
-## 🎯 Objetivo
-
-El objetivo principal es hacer que reservar un espacio universitario sea más fácil y rápido, utilizando IA para que el usuario pueda expresar lo que necesita sin tener que buscar manualmente entre todos los espacios disponibles.
-
-El flujo esperado sería:
-
-**Usuario → IA → Backend → Base de datos → Espacios disponibles → Reserva → Correo de confirmación**
-
-## 🚧 Estado del proyecto
-
-Actualmente el proyecto se encuentra en desarrollo.
-
-### Próximamente
-
-* [ ] Diseño de la interfaz web
-* [ ] Sistema de autenticación
-* [ ] Gestión de espacios
-* [ ] Sistema de reservas
-* [ ] Integración con IA
-* [ ] Servicio de notificaciones
-* [ ] Despliegue en la nube
+* Reservas que no son utilizadas.
+* Espacios de estudio desaprovechados.
+* Estudiantes que necesitan espacios pero no pueden utilizarlos.
+* Falta de control sobre el uso real de los espacios.
 
 ---
 
-**Proyecto universitario — Sistema Inteligente de Reserva de Espacios**
+## 2. Solución propuesta
 
+El sistema contará con una plataforma web donde los estudiantes podrán:
 
-⭐ Proyecto académico orientado a la aplicación de conceptos de telecomunicaciones, sistemas distribuidos, infraestructura en la nube, seguridad, automatización e Inteligencia Artificial.
+* Consultar la disponibilidad de los espacios.
+* Realizar reservas.
+* Solicitar espacios mediante lenguaje natural.
+* Interactuar con un asistente conversacional basado en inteligencia artificial.
+
+El asistente funcionará de manera similar a los chatbots utilizados en plataformas como Rappi.
+
+### Ejemplo
+
+> "Necesito un espacio para estudiar con tres compañeros mañana a las 4 de la tarde."
+
+La IA interpretará la solicitud y extraerá información como:
+
+* Fecha y hora.
+* Cantidad de personas.
+* Tipo de espacio.
+* Recursos requeridos.
+
+Posteriormente, el sistema consultará la base de datos para encontrar los espacios realmente disponibles y el asistente presentará las opciones al usuario.
+
+> La IA no determinará la disponibilidad por sí misma. La información será obtenida de la base de datos y el backend será responsable de ejecutar las operaciones de reserva.
+
+---
+
+## 3. Funcionamiento de la IA
+
+El chatbot funcionará como una interfaz inteligente entre el estudiante y el sistema de reservas.
+
+### Ejemplo
+
+**Estudiante:**
+
+> "Quiero un espacio mañana a las 3 para estudiar con dos personas."
+
+**IA:**
+
+Interpreta la solicitud y solicita al sistema:
+
+> Buscar espacios disponibles mañana a las 3:00 p. m. con capacidad para 2 personas.
+
+**Backend:**
+
+* Consulta la base de datos.
+* Busca los espacios disponibles.
+* Devuelve los resultados.
+
+**IA:**
+
+> "Encontré dos espacios disponibles. ¿Cuál deseas reservar?"
+
+Una vez el estudiante confirma:
+
+* El sistema registra la reserva.
+* El servicio de notificaciones envía automáticamente un correo de confirmación.
+
+De esta manera, la IA no se utiliza únicamente como un chatbot informativo, sino como un componente capaz de interactuar con las funcionalidades reales del sistema.
+
+---
+
+## 4. Arquitectura e infraestructura
+
+La solución estará organizada principalmente en dos servicios:
+
+### Servicio Web
+
+Encargado de:
+
+* La interfaz.
+* La autenticación.
+* La gestión de reservas.
+* La comunicación con la base de datos.
+* La conexión con la IA.
+
+### Servicio de Notificaciones
+
+Encargado de:
+
+* Enviar correos automáticos relacionados con las reservas.
+
+### Infraestructura
+
+La plataforma será desplegada en la nube y se contemplarán mecanismos de:
+
+* Balanceo de carga y escalabilidad.
+* Base de datos protegida.
+* HTTPS y certificados SSL/TLS.
+* Control de acceso y firewall.
+* Variables de entorno para proteger credenciales.
+* GitHub Actions para automatizar el despliegue.
+
+Esto permitirá demostrar conceptos de:
+
+* Microservicios.
+* Infraestructura en la nube.
+* Seguridad.
+* Escalabilidad.
+* Automatización.
+
+---
+
+## 5. Resultado esperado
+
+Se espera obtener un prototipo funcional donde el estudiante pueda:
+
+* Interactuar con el chatbot.
+* Expresar su necesidad.
+* Recibir espacios disponibles.
+* Seleccionar uno.
+* Realizar la reserva.
+* Recibir confirmación por correo.
+
+### Valor diferencial
+
+El principal valor diferencial será utilizar la inteligencia artificial para facilitar la interacción y toma de decisiones, en lugar de incorporarla únicamente como un requisito del proyecto.
+
+---
+
+## En resumen
+
+La propuesta busca transformar un proceso tradicional de reserva en una experiencia más sencilla, conversacional e inteligente, utilizando IA para comprender las necesidades del estudiante y conectarlas con la información real de los espacios universitarios.
+
