@@ -1,219 +1,409 @@
-🏫 Sistema Inteligente de Reserva de Espacios Universitarios
-Plataforma web inteligente para consultar, gestionar y reservar espacios universitarios mediante un asistente conversacional basado en Inteligencia Artificial.
+# 🏫✨ Sistema Inteligente de Reserva de Espacios Universitarios
 
-📌 Descripción del proyecto
-En las universidades, algunos espacios de estudio son reservados por profesores o tutores que en ocasiones no hacen uso de ellos. Esto genera un desaprovechamiento de los espacios disponibles, mientras otros estudiantes pueden necesitarlos.
-Este proyecto propone una plataforma web que permita a los estudiantes consultar la disponibilidad y reservar espacios universitarios de una manera sencilla e intuitiva.
-Como elemento diferencial, el sistema incorpora un asistente conversacional basado en Inteligencia Artificial, capaz de interpretar solicitudes realizadas en lenguaje natural y convertirlas en operaciones reales dentro del sistema de reservas.
+<p align="center">
+  <img src="https://img.shields.io/badge/IA-Inteligencia%20Artificial-8B5CF6?style=for-the-badge&logo=openai&logoColor=white" alt="IA">
+  <img src="https://img.shields.io/badge/Cloud-Infrastructure-06B6D4?style=for-the-badge&logo=icloud&logoColor=white" alt="Cloud">
+  <img src="https://img.shields.io/badge/Status-En%20desarrollo-F59E0B?style=for-the-badge" alt="Status">
+</p>
 
-🎯 Problema
-La gestión tradicional de espacios universitarios puede generar:
-❌ Reservas que no son utilizadas.
-❌ Espacios disponibles que no son aprovechados.
-❌ Dificultad para conocer la disponibilidad en tiempo real.
-❌ Procesos de reserva poco intuitivos.
-❌ Poca flexibilidad para realizar solicitudes.
-Esto provoca que estudiantes que realmente necesitan un espacio tengan dificultades para acceder a él.
+<p align="center">
+  <b>Una forma más inteligente, rápida y conversacional de reservar espacios universitarios.</b>
+</p>
 
-💡 Solución propuesta
-La solución consiste en una plataforma web de reservas conectada a una base de datos que mantiene la información real sobre los espacios disponibles.
-El sistema contará con un asistente conversacional con IA, permitiendo que los estudiantes realicen solicitudes utilizando lenguaje natural.
-💬 Ejemplo
-Estudiante:
-"Necesito un espacio para estudiar con tres compañeros mañana a las 4 de la tarde."
-La IA interpreta la solicitud y obtiene información como:
-Información
-Ejemplo
-📅 Fecha
-Mañana
-🕐 Hora
-4:00 p. m.
-👥 Personas
-4
-🏫 Tipo de espacio
-Espacio de estudio
-🔌 Recursos
-Según disponibilidad
+---
 
-Posteriormente, el sistema consulta la base de datos para encontrar los espacios que realmente están disponibles.
-IA:
-"Encontré dos espacios disponibles. ¿Cuál deseas reservar?"
-Una vez el estudiante confirma su elección, el backend registra la reserva y el servicio de notificaciones envía un correo de confirmación.
+## 🌌 ¿Qué es?
 
-🤖 Funcionamiento de la Inteligencia Artificial
-La IA funciona como una interfaz inteligente entre el estudiante y el sistema de reservas.
-🔄 Flujo de funcionamiento
-┌──────────────────┐
-│    👨‍🎓 Usuario    │
-└────────┬─────────┘
-         │
-         │ Lenguaje natural
-         ▼
-┌──────────────────┐
-│   🤖 Asistente   │
-│       IA         │
-└────────┬─────────┘
-         │
-         │ Información estructurada
-         ▼
-┌──────────────────┐
-│    🌐 Backend    │
-└────────┬─────────┘
-         │
-         │ Consulta
-         ▼
-┌──────────────────┐
-│   🗄️ Base de     │
-│     datos        │
-└────────┬─────────┘
-         │
-         │ Espacios disponibles
-         ▼
-┌──────────────────┐
-│   🤖 Asistente   │
-└────────┬─────────┘
-         │
-         │ Opciones
-         ▼
-┌──────────────────┐
-│    👨‍🎓 Usuario    │
-└────────┬─────────┘
-         │
-         │ Confirmación
-         ▼
-┌──────────────────┐
-│    🌐 Backend    │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│  📧 Notificación │
-└──────────────────┘
-⚠️ Importante
-La Inteligencia Artificial no determina por sí misma la disponibilidad de los espacios.
-La disponibilidad siempre será consultada en la base de datos, mientras que el backend será responsable de ejecutar las operaciones de reserva.
-Esto permite mantener una separación clara entre:
-🧠 Interpretación de lenguaje natural → IA
-🔎 Consulta de disponibilidad → Backend + Base de datos
-📝 Registro de reservas → Backend
-📧 Confirmaciones → Servicio de notificaciones
+En las universidades, muchos espacios de estudio son reservados pero no utilizados. Mientras tanto, otros estudiantes necesitan esos mismos espacios y no pueden acceder a ellos.
 
-🏗️ Arquitectura e infraestructura
-La solución estará organizada principalmente en dos servicios:
-🌐 Servicio Web
-Será responsable de:
-Interfaz web.
-Autenticación de usuarios.
-Gestión de reservas.
-Consulta de disponibilidad.
-Comunicación con la base de datos.
-Integración con el asistente de IA.
-📧 Servicio de Notificaciones
-Será responsable de:
-Envío de correos de confirmación.
-Notificaciones relacionadas con las reservas.
-Comunicación con el servicio principal.
-☁️ Infraestructura
-La plataforma será desplegada en la nube y se contemplarán mecanismos de:
-⚖️ Balanceo de carga.
-📈 Escalabilidad.
-🗄️ Base de datos protegida.
-🔐 HTTPS y certificados SSL/TLS.
-🛡️ Control de acceso y firewall.
-🔑 Variables de entorno para proteger credenciales.
-⚙️ GitHub Actions para automatizar el despliegue.
+💡 **Nuestra propuesta:** crear una plataforma web inteligente que conecte las necesidades de los estudiantes con la disponibilidad real de los espacios universitarios.
 
-🔐 Seguridad
-El sistema tendrá en cuenta diferentes mecanismos de seguridad:
-Mecanismo
-Objetivo
-🔐 HTTPS / SSL-TLS
-Proteger la comunicación
-🛡️ Firewall
-Controlar el tráfico
-🔑 Variables de entorno
-Proteger credenciales
-👤 Autenticación
-Controlar el acceso
-🗄️ Base de datos protegida
-Proteger la información
-⚙️ CI/CD
-Automatizar despliegues seguros
+El usuario podrá hablar con un asistente de IA utilizando lenguaje natural:
 
+> 💬 *"Necesito un espacio para estudiar con tres compañeros mañana a las 4 de la tarde."*
 
-🚀 Flujo principal del sistema
-1. 👨‍🎓 El estudiante ingresa a la plataforma
-                    ↓
-2. 💬 Describe lo que necesita
-                    ↓
-3. 🤖 La IA interpreta la solicitud
-                    ↓
-4. 🌐 El backend procesa los parámetros
-                    ↓
-5. 🗄️ Se consulta la disponibilidad
-                    ↓
-6. 📋 Se muestran las opciones disponibles
-                    ↓
-7. 👨‍🎓 El estudiante selecciona un espacio
-                    ↓
-8. ✅ Se registra la reserva
-                    ↓
-9. 📧 Se envía la confirmación
+La IA interpreta la solicitud, el backend consulta la disponibilidad real y el usuario recibe las mejores opciones para reservar.
 
-🎯 Resultado esperado
-Se espera obtener un prototipo funcional que permita al estudiante:
-Interactuar con el chatbot → expresar su necesidad → recibir espacios disponibles → seleccionar uno → realizar la reserva → recibir confirmación por correo.
-El principal valor diferencial del proyecto será utilizar la Inteligencia Artificial como parte funcional del sistema, permitiendo que el usuario interactúe mediante lenguaje natural y conectando dicha interacción con las funcionalidades reales de reserva.
+---
 
-🧩 Tecnologías
-Esta sección puede actualizarse a medida que se definan las tecnologías definitivas del proyecto.
-🌐 Aplicación Web
-🤖 Inteligencia Artificial / LLM
+## 🚀 ¿Cómo funciona?
+
+```mermaid
+flowchart LR
+    A[👨‍🎓 Estudiante] --> B[💬 Asistente IA]
+    B --> C[🧠 Interpretación]
+    C --> D[⚙️ Backend]
+    D --> E[(🗄️ Base de Datos)]
+    E --> D
+    D --> B
+    B --> F[🏫 Espacios disponibles]
+    F --> A
+    A --> G[✅ Reserva]
+    G --> H[📧 Notificación]
+```
+
+### ✨ Flujo principal
+
+```text
+👨‍🎓 Usuario
+     │
+     ▼
+💬 Solicitud en lenguaje natural
+     │
+     ▼
+🤖 Asistente IA
+     │
+     ├── 📅 Fecha
+     ├── 🕐 Hora
+     ├── 👥 Personas
+     ├── 🏫 Tipo de espacio
+     └── 🖥️ Recursos
+     │
+     ▼
+⚙️ Backend
+     │
+     ▼
 🗄️ Base de datos
-🔌 API / Backend
-📧 Servicio de correo
-☁️ Infraestructura Cloud
-🔐 HTTPS / SSL-TLS
+     │
+     ▼
+🏫 Espacios disponibles
+     │
+     ▼
+👨‍🎓 Selección del usuario
+     │
+     ▼
+✅ Reserva confirmada
+     │
+     ▼
+📧 Correo de confirmación
+```
+
+---
+
+## 🤖 Inteligencia Artificial
+
+La IA funciona como una **interfaz conversacional** entre el estudiante y el sistema.
+
+### Ejemplo
+
+**👨‍🎓 Estudiante**
+
+> Quiero un espacio mañana a las 3 para estudiar con dos personas.
+
+**🤖 IA**
+
+> Encontré dos espacios disponibles para mañana a las 3:00 p. m. ¿Cuál deseas reservar?
+
+El asistente identifica los parámetros necesarios y se los comunica al backend.
+
+### 🧠 Importante
+
+La IA **NO decide qué espacios están disponibles**.
+
+La disponibilidad siempre proviene de la **base de datos**, mientras que el backend se encarga de ejecutar las operaciones reales.
+
+```text
+IA
+ │
+ │ interpreta
+ ▼
+Solicitud estructurada
+ │
+ ▼
+Backend
+ │
+ │ consulta
+ ▼
+Base de datos
+ │
+ │ disponibilidad real
+ ▼
+Backend
+ │
+ ▼
+IA
+ │
+ ▼
+👨‍🎓 Usuario
+```
+
+Esto permite mantener una separación clara entre:
+
+* 🧠 Interpretación mediante IA
+* ⚙️ Lógica de negocio
+* 🗄️ Datos reales
+* 🔐 Seguridad
+* 📧 Notificaciones
+
+---
+
+# 🏗️ Arquitectura
+
+La plataforma estará dividida principalmente en dos servicios:
+
+### 🌐 Servicio Web
+
+Responsable de:
+
+* 👤 Autenticación
+* 🏫 Consulta de espacios
+* 📅 Gestión de reservas
+* 🗄️ Comunicación con la base de datos
+* 🤖 Integración con la IA
+* 🔐 Control de acceso
+
+### 📧 Servicio de Notificaciones
+
+Responsable de:
+
+* Confirmaciones de reserva
+* Recordatorios
+* Cancelaciones
+* Notificaciones relacionadas con los espacios
+
+---
+
+## ☁️ Infraestructura
+
+El proyecto será desplegado en la nube utilizando una arquitectura preparada para crecer.
+
+```text
+                    ☁️ CLOUD
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+        🌐 Servicio Web     📧 Notificaciones
+             │                   │
+             └─────────┬─────────┘
+                       │
+                 🗄️ Base de Datos
+                       │
+                 🔐 Seguridad
+```
+
+### 🔒 Seguridad
+
+Se contemplan mecanismos como:
+
+* 🔐 HTTPS
+* 🛡️ SSL/TLS
+* 🚧 Firewall
+* 👤 Control de acceso
+* 🔑 Variables de entorno
+* 🗄️ Base de datos protegida
+* 🚫 Protección de credenciales
+
+### 📈 Escalabilidad
+
+La infraestructura podrá incorporar:
+
+* ⚖️ Balanceo de carga
+* 📦 Contenedores
+* 📈 Escalabilidad horizontal
+* ☁️ Servicios administrados en la nube
+* 🔄 Automatización del despliegue
+
+---
+
+# ⚙️ CI/CD
+
+El proyecto utilizará **GitHub Actions** para automatizar procesos de integración y despliegue.
+
+```text
+👨‍💻 Developer
+     │
+     ▼
+📦 Git Push
+     │
+     ▼
+🐙 GitHub
+     │
+     ▼
 ⚙️ GitHub Actions
-🐳 Contenedores / Microservicios
+     │
+     ├── 🧪 Tests
+     ├── 🔍 Validaciones
+     ├── 🏗️ Build
+     └── 🚀 Deploy
+             │
+             ▼
+          ☁️ Cloud
+```
 
-📂 Estructura propuesta
-📦 sistema-reserva-espacios
+---
+
+# 🧩 Funcionalidades
+
+### 👨‍🎓 Para estudiantes
+
+* [x] 💬 Solicitudes mediante lenguaje natural
+* [x] 🔎 Consulta de disponibilidad
+* [x] 📅 Reserva de espacios
+* [x] ✅ Confirmación de reserva
+* [x] 📧 Notificaciones por correo
+* [ ] 🔄 Gestión de reservas
+* [ ] ❌ Cancelación de reservas
+* [ ] 📜 Historial de reservas
+
+### 🤖 Inteligencia Artificial
+
+* [x] 🧠 Interpretación de lenguaje natural
+* [x] 📅 Extracción de fecha y hora
+* [x] 👥 Identificación de cantidad de personas
+* [x] 🏫 Identificación del tipo de espacio
+* [x] 🖥️ Identificación de recursos requeridos
+* [x] 🔗 Comunicación con el backend
+
+---
+
+# 🎯 Objetivo
+
+Transformar el proceso tradicional de reserva de espacios universitarios en una experiencia:
+
+> **💬 Conversacional · ⚡ Rápida · 🧠 Inteligente · 🔐 Segura**
+
+El objetivo no es simplemente agregar IA al proyecto.
+
+El objetivo es utilizarla para **resolver un problema real** y mejorar la experiencia de los estudiantes.
+
+---
+
+# 🌟 Ejemplo de experiencia
+
+```text
+👨‍🎓 "Necesito estudiar mañana con 3 amigos a las 4."
+
+              ↓
+
+🤖 "Entendido. Buscando espacios para 4 personas
+    mañana a las 4:00 p. m."
+
+              ↓
+
+🗄️ Consulta a la base de datos
+
+              ↓
+
+🏫 Sala 204
+🏫 Sala 307
+🏫 Sala de estudio B
+
+              ↓
+
+🤖 "Encontré 3 espacios disponibles.
+    ¿Cuál deseas reservar?"
+
+              ↓
+
+👨‍🎓 "La sala 307."
+
+              ↓
+
+✅ Reserva realizada
+
+              ↓
+
+📧 "Tu reserva fue confirmada."
+```
+
+---
+
+# 🛠️ Tecnologías
+
+> Las tecnologías específicas pueden ajustarse durante el desarrollo.
+
+| Área               | Tecnología           |
+| ------------------ | -------------------- |
+| 🌐 Frontend        | Web                  |
+| ⚙️ Backend         | API / Servicios      |
+| 🤖 IA              | Modelo de lenguaje   |
+| 🗄️ Base de datos  | SQL / NoSQL          |
+| ☁️ Infraestructura | Cloud                |
+| 🔄 CI/CD           | GitHub Actions       |
+| 🔐 Seguridad       | HTTPS / SSL / TLS    |
+| 📧 Notificaciones  | Servicio de correo   |
+| 📦 Deployment      | Contenedores / Cloud |
+
+---
+
+# 📂 Estructura propuesta
+
+```text
+📦 sistema-reserva-universitaria
 │
-├── 📁 frontend
-│   └── Aplicación web
+├── 🌐 web/
+│   ├── frontend/
+│   └── backend/
 │
-├── 📁 backend
-│   └── API y lógica de reservas
+├── 🤖 ai/
+│   ├── assistant/
+│   └── prompts/
 │
-├── 📁 notification-service
-│   └── Servicio de notificaciones
+├── 📧 notifications/
 │
-├── 📁 database
-│   └── Scripts y configuración de BD
+├── 🗄️ database/
 │
-├── 📁 docs
-│   └── Documentación del proyecto
+├── 🧪 tests/
 │
-├── ⚙️ .github
-│   └── workflows
+├── ⚙️ .github/
+│   └── workflows/
 │
+├── 🔐 .env.example
 ├── 📄 README.md
-└── 📄 .gitignore
+└── 📦 docker-compose.yml
+```
 
-👥 Equipo
-Integrante
-Rol
-👩‍💻 Integrante 1
-Desarrollo
-👨‍💻 Integrante 2
-Desarrollo
-👩‍💻 Integrante 3
-Desarrollo
+---
 
+# 📊 Resultado esperado
 
-📚 Proyecto académico
-Materia: Teleco 1
-Proyecto: Sistema Inteligente de Reserva de Espacios Universitarios
+Al finalizar el proyecto, se espera contar con un prototipo funcional capaz de realizar el siguiente flujo:
+
+**👨‍🎓 Interactuar con el chatbot**
+
+↓
+
+**💬 Expresar una necesidad**
+
+↓
+
+**🤖 Interpretar la solicitud**
+
+↓
+
+**🔎 Consultar disponibilidad real**
+
+↓
+
+**🏫 Mostrar opciones**
+
+↓
+
+**✅ Realizar reserva**
+
+↓
+
+**📧 Enviar confirmación**
+
+---
+
+# 💜 ¿Por qué este proyecto?
+
+Porque reservar un salón no debería sentirse como buscar un tesoro perdido. 🗺️
+
+Queremos que el estudiante simplemente pueda decir:
+
+> **"Necesito un espacio."**
+
+Y que el sistema se encargue del resto. ✨
+
+---
+
+<p align="center">
+  <b>🏫 Sistema Inteligente de Reserva de Espacios Universitarios</b>
+  <br>
+  <sub>Construido con IA, cloud y muchas ganas de hacer las cosas más fáciles. 💜</sub>
+</p>
+
 
 ⭐ Proyecto académico orientado a la aplicación de conceptos de telecomunicaciones, sistemas distribuidos, infraestructura en la nube, seguridad, automatización e Inteligencia Artificial.
