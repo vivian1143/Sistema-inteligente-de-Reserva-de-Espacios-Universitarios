@@ -138,3 +138,48 @@ El principal valor diferencial será utilizar la inteligencia artificial para fa
 
 La propuesta busca transformar un proceso tradicional de reserva en una experiencia más sencilla, conversacional e inteligente, utilizando IA para comprender las necesidades del estudiante y conectarlas con la información real de los espacios universitarios.
 
+---
+
+# Primer paso
+
+# Sistema de Reserva de Espacios – UNILLANOS (Parcial I, MVP)
+
+Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
+
+```mermaid
+flowchart LR
+  F[Frontend :8080] -- POST /login --> A[Auth Service :8001 - users.db]
+  F -- Bearer JWT --> R[Rooms Service :8002 - rooms.db]
+  A -. JWT_SECRET compartido .- R
+```
+
+## Ejecutar localmente
+Sin Docker (PHP 8.1+ con pdo_sqlite), tres terminales:
+```
+export JWT_SECRET=un-secreto-largo
+cd auth-service  && php -S localhost:8001 index.php
+cd rooms-service && php -S localhost:8002 index.php
+cd frontend      && php -S localhost:8080
+```
+Con Docker: `docker compose up` → http://localhost:8080
+
+## Usuarios demo
+| Rol | Correo | Clave |
+|---|---|---|
+| admin | admin@unillanos.edu.co | Admin123* |
+| docente | docente@unillanos.edu.co | Docente123* |
+| estudiante | estudiante@unillanos.edu.co | Estudiante123* |
+
+## Roles
+- **admin**: crear/editar/eliminar salones, asignar horarios de clase, ver todas las reservas.
+- **docente / estudiante**: buscar salones disponibles, ver detalle, reservar y cancelar las propias.
+
+## API (rooms-service)
+`GET /rooms?date&start&end&capacity&type&touch_screen&air_conditioning&projector` · `GET /rooms/{id}` · `POST|PUT|DELETE /rooms` (admin) · `POST /rooms/{id}/reserve` · `POST /rooms/{id}/block` (admin) · `GET /reservations` · `DELETE /reservations/{id}`
+
+## Diseño
+- **Patrones**: Front Controller, Repository, Middleware (AuthGuard), Service, Validator.
+- **Principios**: SRP (una clase por responsabilidad), DIP (inyección por constructor), servicios independientes.
+- **Seguridad**: bcrypt, PDO con sentencias preparadas, JWT HS256 con expiración, bloqueo tras 5 intentos, RBAC en backend, validación de entradas, escape de HTML en el cliente, secretos por variable de entorno, `.db` fuera de Git.
+- **Modelo de datos**: `users(id,name,email,password_hash,role,…)`; `rooms(id,name,building,type,capacity,touch_screen,air_conditioning,projector,computers)`; `reservations(id,room_id,user_id,date,start,end,purpose,status)`.
+- **Evolución**: chatbot IA como tercer servicio que llame a `GET /rooms` y `POST /rooms/{id}/reserve`; servicio de notificaciones por correo; base de datos gestionada + HTTPS + balanceador en la nube; GitHub Actions.
