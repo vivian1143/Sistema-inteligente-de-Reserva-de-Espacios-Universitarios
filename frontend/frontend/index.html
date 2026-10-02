@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNILLANOS · Reserva de espacios</title>
+<style>
+:root{--bg:#E0E5EC;--fg:#000;--mut:#4B5563;--red:#E3061D;--dk:rgb(163,177,198,.7);--lt:rgba(255,255,255,.6);
+--ext:9px 9px 16px rgb(163,177,198,.6),-9px -9px 16px rgba(255,255,255,.5);
+--extS:5px 5px 10px rgb(163,177,198,.6),-5px -5px 10px rgba(255,255,255,.5);
+--ins:inset 6px 6px 10px rgb(163,177,198,.6),inset -6px -6px 10px rgba(255,255,255,.5);
+--insD:inset 10px 10px 20px rgb(163,177,198,.7),inset -10px -10px 20px rgba(255,255,255,.6)}
+*{box-sizing:border-box;font-family:"Times New Roman",Times,serif}
+body{margin:0;background:var(--bg);color:var(--fg);font-size:17px;line-height:1.5}
+h1,h2,h3{margin:0;letter-spacing:-.01em}
+button,input,select{font-size:16px;color:var(--fg)}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.btn{border:0;background:var(--bg);border-radius:16px;padding:12px 20px;min-height:44px;cursor:pointer;box-shadow:var(--extS);transition:.3s ease-out;font-weight:700}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--ext)}
+.btn:active{transform:translateY(1px);box-shadow:var(--ins)}
+.btn.red{background:var(--red);color:#fff}.btn.blk{background:#000;color:#fff}
+input,select{border:0;background:var(--bg);border-radius:16px;padding:12px 16px;min-height:44px;box-shadow:var(--ins);width:100%}
+input:focus,select:focus{box-shadow:var(--insD)}
+label{display:block;font-size:14px;color:var(--mut);margin:0 0 4px 6px}
+.card{background:var(--bg);border-radius:32px;box-shadow:var(--ext);padding:28px;transition:.3s ease-out}
+.well{background:var(--bg);border-radius:16px;box-shadow:var(--insD);padding:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 32px;position:sticky;top:0;z-index:5;background:var(--bg);box-shadow:0 8px 16px rgb(163,177,198,.4)}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:48px;height:48px;border-radius:50%;background:var(--red);box-shadow:var(--ext);display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px}
+.brand b{font-size:22px}.brand small{display:block;color:var(--mut);font-size:13px}
+main{max-width:1200px;margin:0 auto;padding:32px 20px 80px}
+nav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+nav .btn.on{box-shadow:var(--ins);color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:32px;margin-top:28px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;align-items:end}
+.room:hover{transform:translateY(-3px);box-shadow:12px 12px 20px rgb(163,177,198,.7),-12px -12px 20px rgba(255,255,255,.6)}
+.room h3{font-size:22px}.cap{font-size:40px;font-weight:700;color:var(--red);line-height:1}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tag{font-size:14px;padding:4px 12px;border-radius:99px;box-shadow:var(--ins)}
+.tag.no{opacity:.45;text-decoration:line-through}
+.bar{height:6px;border-radius:6px;background:var(--red);margin-bottom:16px;width:56px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;place-items:center;padding:16px;z-index:10;overflow:auto}
+.modal.open{display:grid}.modal .card{max-width:620px;width:100%}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.login{max-width:440px;margin:8vh auto}
+.login .logo{width:72px;height:72px;font-size:32px;margin:0 auto 18px}
+.msg{color:var(--red);min-height:24px;font-weight:700}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;margin-bottom:14px}
+.chk{display:flex;align-items:center;gap:8px}.chk input{width:22px;min-height:22px;accent-color:var(--red)}
+.hide{display:none!important}.role{padding:6px 16px;border-radius:99px;box-shadow:var(--ins);font-weight:700;color:var(--red)}
+@media(max-width:600px){header{padding:16px}.card{padding:20px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+
+<section id="loginView" class="login card">
+  <div class="logo">U</div>
+  <h1 style="text-align:center">Universidad de los Llanos</h1>
+  <p style="text-align:center;color:var(--mut);margin:4px 0 24px">Ingresa para reservar un espacio de estudio</p>
+  <label for="em">Correo institucional</label><input id="em" type="email" autocomplete="username" value="estudiante@unillanos.edu.co">
+  <div style="height:14px"></div>
+  <label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" value="Estudiante123*">
+  <p class="msg" id="lmsg" role="alert"></p>
+  <button class="btn red" style="width:100%" id="loginBtn">Iniciar sesión</button>
+</section>
+
+<div id="appView" class="hide">
+<header>
+  <div class="brand"><div class="logo">U</div><div><b>Reserva de espacios</b><small>Universidad de los Llanos</small></div></div>
+  <div class="row" style="flex:0;align-items:center"><span id="who"></span><span class="role" id="roleTag"></span><button class="btn blk" id="logout">Salir</button></div>
+</header>
+<main>
+  <nav id="tabs"></nav>
+
+  <section id="tab-rooms">
+    <div class="card"><h2>¿Cuándo necesitas el espacio?</h2>
+      <div class="filters" style="margin-top:18px">
+        <div><label for="fd">Fecha</label><input id="fd" type="date"></div>
+        <div><label for="fs">Desde</label><input id="fs" type="time" value="15:00"></div>
+        <div><label for="fe">Hasta</label><input id="fe" type="time" value="17:00"></div>
+        <div><label for="fc">Personas</label><input id="fc" type="number" min="1" value="2"></div>
+        <div><label for="ft">Tipo</label><select id="ft"><option value="">Todos</option><option value="sala_estudio">Sala de estudio</option><option value="aula">Aula</option><option value="laboratorio_computo">Sala de cómputo</option><option value="auditorio">Auditorio</option></select></div>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <label class="chk"><input type="checkbox" id="fx1">Pantalla táctil</label>
+        <label class="chk"><input type="checkbox" id="fx2">Aire acondicionado</label>
+        <label class="chk"><input type="checkbox" id="fx3">Proyector</label>
+        <button class="btn red" id="searchBtn">Buscar salones libres</button>
+      </div>
+    </div>
+    <p id="count" style="margin:24px 6px 0;color:var(--mut)"></p>
+    <div class="grid" id="rooms"></div>
+  </section>
+
+  <section id="tab-mine" class="hide"><h2 style="margin-bottom:20px">Mis reservas</h2><div id="mine"></div></section>
+
+  <section id="tab-admin" class="hide">
+    <div class="card"><h2 id="formTitle">Agregar salón</h2>
+      <div class="filters" style="margin-top:18px">
+        <div><label for="an">Nombre</label><input id="an"></div>
+        <div><label for="ab">Bloque</label><input id="ab"></div>
+        <div><label for="at">Tipo</label><select id="at"><option value="sala_estudio">Sala de estudio</option><option value="aula">Aula</option><option value="laboratorio_computo">Sala de cómputo</option><option value="auditorio">Auditorio</option></select></div>
+        <div><label for="ac">Puestos</label><input id="ac" type="number" min="1"></div>
+        <div><label for="ap">Computadores</label><input id="ap" type="number" min="0" value="0"></div>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <label class="chk"><input type="checkbox" id="ax1">Pantalla táctil</label>
+        <label class="chk"><input type="checkbox" id="ax2">Aire acondicionado</label>
+        <label class="chk"><input type="checkbox" id="ax3">Proyector</label>
+        <button class="btn red" id="saveRoom">Guardar salón</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:32px"><h2>Asignar horario de clase</h2>
+      <div class="filters" style="margin-top:18px">
+        <div><label for="bs">Salón</label><select id="bs"></select></div>
+        <div><label for="bd">Fecha</label><input id="bd" type="date"></div>
+        <div><label for="bh1">Inicio</label><input id="bh1" type="time" value="08:00"></div>
+        <div><label for="bh2">Fin</label><input id="bh2" type="time" value="10:00"></div>
+        <div><label for="bp">Materia / motivo</label><input id="bp"></div>
+        <button class="btn red" id="blockBtn">Asignar horario</button>
+      </div>
+    </div>
+    <h2 style="margin:32px 0 16px">Salones registrados</h2><div id="adminRooms"></div>
+  </section>
+</main></div>
+
+<div class="modal" id="modal"><div class="card" id="mbody"></div></div>
+
+<script>
+const AUTH='http://localhost:8001', ROOMS='http://localhost:8002';
+const T={sala_estudio:'Sala de estudio',aula:'Aula',laboratorio_computo:'Sala de cómputo',auditorio:'Auditorio'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let token=sessionStorage.getItem('t'), user=JSON.parse(sessionStorage.getItem('u')||'null'), editing=null, cache=[];
+
+async function api(base,path,method='GET',body){
+  const r=await fetch(base+path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined});
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401&&token){logout();}
+  if(!r.ok) throw new Error(d.error||'Error de red');
+  return d;
+}
+function toast(m){alert(m)}
+
+$('loginBtn').onclick=async()=>{
+  $('lmsg').textContent='';
+  try{const d=await api(AUTH,'/login','POST',{email:$('em').value,password:$('pw').value});
+    token=d.token;user=d.user;sessionStorage.setItem('t',token);sessionStorage.setItem('u',JSON.stringify(user));start();
+  }catch(e){$('lmsg').textContent=e.message}
+};
+$('pw').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
+function logout(){sessionStorage.clear();token=user=null;location.reload()}
+$('logout').onclick=logout;
+
+function start(){
+  $('loginView').classList.add('hide');$('appView').classList.remove('hide');
+  $('who').textContent=user.name;$('roleTag').textContent=user.role;
+  const tabs=[['rooms','Salones disponibles'],['mine',user.role==='admin'?'Todas las reservas':'Mis reservas']];
+  if(user.role==='admin')tabs.push(['admin','Administración']);
+  $('tabs').innerHTML=tabs.map(([k,l])=>`<button class="btn" data-t="${k}">${l}</button>`).join('');
+  $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>show(b.dataset.t));
+  const tm=new Date(Date.now()+864e5).toISOString().slice(0,10);
+  ['fd','bd'].forEach(i=>$(i).value=tm);
+  show('rooms');
+}
+function show(t){
+  ['rooms','mine','admin'].forEach(k=>$('tab-'+k).classList.toggle('hide',k!==t));
+  $('tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  if(t==='rooms')search();if(t==='mine')loadMine();if(t==='admin')loadAdmin();
+}
+
+const tag=(on,l)=>`<span class="tag ${on?'':'no'}">${l}</span>`;
+const tags=r=>tag(r.air_conditioning,'Aire acondicionado')+tag(r.touch_screen,'Pantalla táctil')+tag(r.projector,'Proyector')+(r.computers>0?tag(1,r.computers+' computadores'):'');
+
+async function search(){
+  const q=new URLSearchParams({date:$('fd').value,start:$('fs').value,end:$('fe').value,capacity:$('fc').value||1,type:$('ft').value});
+  [['fx1','touch_screen'],['fx2','air_conditioning'],['fx3','projector']].forEach(([i,k])=>{if($(i).checked)q.set(k,1)});
+  try{const {rooms}=await api(ROOMS,'/rooms?'+q);cache=rooms;
+    $('count').textContent=rooms.length?`${rooms.length} salón(es) libre(s) para ese horario`:'Ningún salón libre con esos criterios. Cambia la hora o reduce los filtros.';
+    $('rooms').innerHTML=rooms.map(r=>`<article class="card room"><div class="bar"></div><h3>${esc(r.name)}</h3>
+      <div style="color:var(--mut)">${esc(r.building)} · ${T[r.type]||''}</div>
+      <div class="tags">${tags(r)}</div>
+      <div class="row" style="align-items:center;flex-wrap:nowrap"><div><span class="cap">${r.capacity}</span> puestos</div>
+      <button class="btn red" data-id="${r.id}">Ver y reservar</button></div></article>`).join('');
+    $('rooms').querySelectorAll('button').forEach(b=>b.onclick=()=>detail(b.dataset.id));
+  }catch(e){toast(e.message)}
+}
+$('searchBtn').onclick=search;
+
+async function detail(id){
+  const {room:r,schedule}=await api(ROOMS,'/rooms/'+id);
+  $('mbody').innerHTML=`<h2>${esc(r.name)}</h2><p style="color:var(--mut)">${esc(r.building)} · ${T[r.type]||''} · ${r.capacity} puestos</p>
+   <div class="tags">${tags(r)}</div>
+   <h3 style="margin:18px 0 8px">Horarios ocupados</h3>
+   <div class="well" style="max-height:130px;overflow:auto">${schedule.length?schedule.map(s=>`${esc(s.date)} ${esc(s.start)}–${esc(s.end)} · ${s.status==='clase'?'Clase':'Reservado'} ${esc(s.purpose)}`).join('<br>'):'Sin reservas próximas.'}</div>
+   <h3 style="margin:18px 0 8px">Reservar</h3>
+   <div class="row"><div><label for="md">Fecha</label><input id="md" type="date" value="${$('fd').value}"></div>
+   <div><label for="ms">Desde</label><input id="ms" type="time" value="${$('fs').value}"></div>
+   <div><label for="me">Hasta</label><input id="me" type="time" value="${$('fe').value}"></div></div>
+   <div style="margin-top:12px"><label for="mp">Motivo (opcional)</label><input id="mp" maxlength="120"></div>
+   <p class="msg" id="mmsg" role="alert"></p>
+   <div class="row"><button class="btn" id="mclose">Cerrar</button><button class="btn red" id="mok">Confirmar reserva</button></div>`;
+  $('modal').classList.add('open');
+  $('mclose').onclick=()=>$('modal').classList.remove('open');
+  $('mok').onclick=async()=>{try{await api(ROOMS,`/rooms/${id}/reserve`,'POST',{date:$('md').value,start:$('ms').value,end:$('me').value,purpose:$('mp').value});
+    $('modal').classList.remove('open');toast('Reserva confirmada');search()}catch(e){$('mmsg').textContent=e.message}};
+}
+$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.remove('open')};
+
+async function loadMine(){
+  const {reservations:l}=await api(ROOMS,'/reservations');
+  $('mine').innerHTML=l.length?l.map(v=>`<div class="card item"><div><b>${esc(v.room_name)}</b> · ${esc(v.date)} ${esc(v.start)}–${esc(v.end)}<br>
+   <span style="color:var(--mut)">${v.status==='clase'?'Clase asignada':'Reserva'} · ${esc(v.user_name)} ${esc(v.purpose)}</span></div>
+   <button class="btn" data-id="${v.id}">Cancelar</button></div>`).join(''):'<p>Aún no tienes reservas. Ve a “Salones disponibles” para crear una.</p>';
+  $('mine').querySelectorAll('button').forEach(b=>b.onclick=async()=>{if(confirm('¿Cancelar esta reserva?')){await api(ROOMS,'/reservations/'+b.dataset.id,'DELETE');loadMine()}});
+}
+
+async function loadAdmin(){
+  const {rooms}=await api(ROOMS,'/rooms');cache=rooms;
+  $('bs').innerHTML=rooms.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');
+  $('adminRooms').innerHTML=rooms.map(r=>`<div class="card item"><div><b>${esc(r.name)}</b> · ${esc(r.building)} · ${r.capacity} puestos<div class="tags">${tags(r)}</div></div>
+   <div class="row" style="flex:0"><button class="btn" data-e="${r.id}">Editar</button><button class="btn blk" data-d="${r.id}">Eliminar</button></div></div>`).join('');
+  $('adminRooms').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>edit(+b.dataset.e));
+  $('adminRooms').querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{if(confirm('Se eliminará el salón y sus reservas. ¿Continuar?')){await api(ROOMS,'/rooms/'+b.dataset.d,'DELETE');loadAdmin()}});
+}
+function edit(id){const r=cache.find(x=>x.id==id);editing=id;$('formTitle').textContent='Editar salón';
+  $('an').value=r.name;$('ab').value=r.building;$('at').value=r.type;$('ac').value=r.capacity;$('ap').value=r.computers;
+  $('ax1').checked=!!r.touch_screen;$('ax2').checked=!!r.air_conditioning;$('ax3').checked=!!r.projector;scrollTo({top:0,behavior:'smooth'})}
+$('saveRoom').onclick=async()=>{
+  const b={name:$('an').value,building:$('ab').value,type:$('at').value,capacity:+$('ac').value,computers:+$('ap').value,touch_screen:$('ax1').checked,air_conditioning:$('ax2').checked,projector:$('ax3').checked};
+  try{editing?await api(ROOMS,'/rooms/'+editing,'PUT',b):await api(ROOMS,'/rooms','POST',b);
+    editing=null;$('formTitle').textContent='Agregar salón';['an','ab','ac'].forEach(i=>$(i).value='');loadAdmin()}catch(e){toast(e.message)}};
+$('blockBtn').onclick=async()=>{try{await api(ROOMS,`/rooms/${$('bs').value}/block`,'POST',{date:$('bd').value,start:$('bh1').value,end:$('bh2').value,purpose:$('bp').value});toast('Horario asignado')}catch(e){toast(e.message)}};
+
+if(token&&user)start();
+</script></body></html>
