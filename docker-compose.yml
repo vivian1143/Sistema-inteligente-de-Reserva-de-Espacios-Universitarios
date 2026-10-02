@@ -1,0 +1,31 @@
+services:
+  auth-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./auth-service:/app
+    command: php -S 0.0.0.0:8001 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+    ports:
+      - "8001:8001"
+
+  rooms-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./rooms-service:/app
+    command: php -S 0.0.0.0:8002 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+    ports:
+      - "8002:8002"
+
+  frontend:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: php -S 0.0.0.0:8080
+    ports:
+      - "8080:8080"
