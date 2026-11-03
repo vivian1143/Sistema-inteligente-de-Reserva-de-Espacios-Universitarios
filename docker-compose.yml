@@ -7,19 +7,48 @@ services:
     command: php -S 0.0.0.0:8001 index.php
     environment:
       JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
     ports:
       - "8001:8001"
 
-  rooms-service:
+  room-catalog-service:
     image: php:8.3-cli
     working_dir: /app
     volumes:
-      - ./rooms-service:/app
-    command: php -S 0.0.0.0:8002 index.php
+      - ./room-catalog-service:/app
+    command: php -S 0.0.0.0:8003 index.php
     environment:
       JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
     ports:
-      - "8002:8002"
+      - "8003:8003"
+
+  room-availability-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./room-availability-service:/app
+    command: php -S 0.0.0.0:8004 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+      CATALOG_URL: "http://room-catalog-service:8003"
+      RESERVATION_URL: "http://reservation-service:8005"
+    ports:
+      - "8004:8004"
+
+  reservation-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./reservation-service:/app
+    command: php -S 0.0.0.0:8005 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+      CATALOG_URL: "http://room-catalog-service:8003"
+    ports:
+      - "8005:8005"
 
   frontend:
     image: php:8.3-cli
@@ -27,5 +56,7 @@ services:
     volumes:
       - ./frontend:/app
     command: php -S 0.0.0.0:8080
+    environment:
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
     ports:
       - "8080:8080"
