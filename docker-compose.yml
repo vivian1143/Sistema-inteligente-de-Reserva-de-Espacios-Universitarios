@@ -40,13 +40,8 @@ services:
     environment:
       JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
       CORS_ORIGIN: "${CORS_ORIGIN:-*}"
-      CATALOG_URL: "http://room-catalog-service:8003"
-      RESERVATION_URL: "http://reservation-service:8005"
     ports:
       - "8004:8004"
-    depends_on:
-      - room-catalog-service
-      - reservation-service
     networks:
       - app-network
 
@@ -59,11 +54,8 @@ services:
     environment:
       JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
       CORS_ORIGIN: "${CORS_ORIGIN:-*}"
-      CATALOG_URL: "http://room-catalog-service:8003"
     ports:
       - "8005:8005"
-    depends_on:
-      - room-catalog-service
     networks:
       - app-network
 
