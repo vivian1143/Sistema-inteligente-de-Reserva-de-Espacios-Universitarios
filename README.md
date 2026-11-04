@@ -146,7 +146,7 @@ La propuesta busca transformar un proceso tradicional de reserva en una experien
 
 Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
 
-![Diagrama Arquitectura](img/Diagrama Arquitectura.drawio.png)
+![Diagrama Arquitectura](img/Diagrama%20Arquitectura.drawio.png)
 
 ## Ejecutar localmente
 Sin Docker (PHP 8.1+ con pdo_sqlite), tres terminales:
