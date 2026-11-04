@@ -146,7 +146,8 @@ La propuesta busca transformar un proceso tradicional de reserva en una experien
 
 Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
 
-https://app.diagrams.net/#G1VytxCJpE06LoJnVQVq5DJLJtrfdofT9U#%7B%22pageId%22%3A%22IBlfZg0cqUfsGpWpG5E0%22%7D
+https://drive.google.com/file/d/1VytxCJpE06LoJnVQVq5DJLJtrfdofT9U/view?usp=sharing
+
 
 ![Diagrama Arquitectura](img/Diagrama%20Arquitectura.drawio.png)
 
