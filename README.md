@@ -146,48 +146,7 @@ La propuesta busca transformar un proceso tradicional de reserva en una experien
 
 Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
 
-```mermaid
-flowchart TB
-  subgraph Internet["Zona Internet"]
-    U["Usuarios<br/>Estudiante, docente, admin"]
-    FE["Frontend :8080<br/>HTML, CSS, JS · sessionStorage"]
-  end
-
-  subgraph App["Zona de aplicación (docker compose)"]
-    AUTH["Auth Service :8001<br/>login"]
-    CAT["Room Catalog :8003<br/>salones"]
-    AV["Availability :8004<br/>horarios"]
-    RES["Reservations :8005<br/>reservas"]
-  end
-
-  subgraph Datos["Zona de datos"]
-    ADB[("auth.db<br/>users")]
-    CDB[("catalog.db<br/>rooms")]
-    VDB[("availability.db<br/>cache")]
-    RDB[("reservations.db<br/>reservations")]
-  end
-
-  JWT{{"JWT_SECRET compartido<br/>Auth firma, los demás verifican"}}
-
-  U --> FE
-  FE -- "POST /login" --> AUTH
-  FE -- "REST + Bearer JWT" --> CAT
-  FE -- "REST + Bearer JWT" --> AV
-  FE -- "REST + Bearer JWT" --> RES
-
-  AV -- "GET /rooms" --> CAT
-  AV -- "GET /reservations/cache-feed" --> RES
-
-  AUTH --> ADB
-  CAT --> CDB
-  AV --> VDB
-  RES --> RDB
-
-  JWT -.-> AUTH
-  JWT -.-> CAT
-  JWT -.-> AV
-  JWT -.-> RES
-```
+![Diagrama Arquitectura](img/Diagrama Arquitectura.drawio.png)
 
 ## Ejecutar localmente
 Sin Docker (PHP 8.1+ con pdo_sqlite), tres terminales:
