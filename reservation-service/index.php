@@ -50,6 +50,12 @@ final class ReservationRepository {
         return (int)$this->db->lastInsertId();
     }
 
+    public function find(int $id): ?array {
+        $s = $this->db->prepare('SELECT * FROM reservations WHERE id=?');
+        $s->execute([$id]);
+        return $s->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
     public function mine(array $user): array {
         $s = $this->db->prepare("SELECT * FROM reservations WHERE (?=1 OR user_id=?) AND status!='cancelada' ORDER BY date DESC,start");
         $s->bindValue(1, $user['role'] === 'admin' ? 1 : 0, PDO::PARAM_INT);
@@ -66,6 +72,11 @@ final class ReservationRepository {
         $s->execute();
         return $s->rowCount() > 0;
     }
+
+    public function cacheFeed(): array {
+        $s = $this->db->query('SELECT id, room_id, date, start, end, status FROM reservations');
+        return $s->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 final class Validator {
@@ -80,31 +91,11 @@ final class Validator {
     }
 }
 
-function http_json(string $url, string $method = 'GET', ?string $token = null): array {
-    $ch = curl_init($url);
-    $headers = ['Content-Type: application/json', 'Accept: application/json'];
-    if ($token) $headers[] = 'Authorization: Bearer ' . $token;
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_CUSTOMREQUEST => $method,
-        CURLOPT_HTTPHEADER => $headers,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_SSL_VERIFYPEER => false,
-    ]);
-    $response = curl_exec($ch);
-    $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    $decoded = json_decode($response === false ? '[]' : $response, true);
-    return ['status' => $status, 'body' => is_array($decoded) ? $decoded : []];
-}
-
 $secret = getenv('JWT_SECRET') ?: 'dev-secret-cambiar-en-produccion';
 $db = new PDO('sqlite:' . __DIR__ . '/reservations.db');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $repo = new ReservationRepository($db);
 $guard = new AuthGuard($secret);
-$catalogUrl = getenv('CATALOG_URL') ?: 'http://localhost:8003';
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 $body = json_decode(file_get_contents('php://input'), true) ?: [];
@@ -116,23 +107,26 @@ try {
         $reservations = $repo->mine($user);
         out(['reservations' => $reservations]);
     }
+    if ($method === 'GET' && $path === '/reservations/cache-feed') {
+        $guard->require();
+        out(['reservations' => $repo->cacheFeed()]);
+    }
     if ($method === 'DELETE' && preg_match('#^/reservations/(\d+)$#', $path, $x)) {
         $user = $guard->require();
-        $repo->cancel((int)$x[1], $user) ? out(['ok' => true]) : out(['error' => 'No permitido o no existe'], 404);
+        $id = (int)$x[1];
+        $repo->cancel($id, $user) ? out(['ok' => true, 'id' => $id]) : out(['error' => 'No permitido o no existe'], 404);
     }
     if ($method === 'POST' && preg_match('#^/rooms/(\d+)/(reserve|block)$#', $path, $x)) {
         $isBlock = $x[2] === 'block';
         $user = $guard->require($isBlock ? ['admin'] : ['admin', 'docente', 'estudiante']);
         $roomId = (int)$x[1];
-        $token = preg_match('/Bearer\s+(\S+)/', $_SERVER['HTTP_AUTHORIZATION'] ?? '', $m) ? $m[1] : null;
-        $room = http_json($catalogUrl . '/rooms/' . $roomId, 'GET', $token);
-        if ($room['status'] !== 200) out(['error' => 'Salón no existe'], 404);
+        if ($roomId < 1) out(['error' => 'Salón inválido'], 422);
         [$date, $start, $end] = Validator::slot($body);
         if ($repo->conflict($roomId, $date, $start, $end)) out(['error' => 'El salón ya está ocupado en ese horario'], 409);
         $purpose = mb_substr(trim(strip_tags((string)($body['purpose'] ?? ''))), 0, 120);
         $status = $isBlock ? 'clase' : 'activa';
         $id = $repo->reserve($roomId, $user, $date, $start, $end, $purpose, $status);
-        out(['id' => $id], 201);
+        out(['id' => $id, 'reservation' => $repo->find($id)], 201);
     }
     out(['error' => 'No encontrado'], 404);
 } catch (Throwable $e) {
