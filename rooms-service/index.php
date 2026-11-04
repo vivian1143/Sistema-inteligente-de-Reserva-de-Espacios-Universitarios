@@ -1,10 +1,6 @@
 <?php
 declare(strict_types=1);
-/**
- * ROOMS SERVICE - Salones, horarios y reservas.
- * Patrones: Front Controller, Repository, Middleware (AuthGuard JWT/roles), Validator.
- * La disponibilidad SIEMPRE sale de la base de datos (la IA futura solo la consultará vía este API).
- */
+
 header('Access-Control-Allow-Origin: ' . (getenv('CORS_ORIGIN') ?: '*'));
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
