@@ -11,17 +11,17 @@
 *{box-sizing:border-box;font-family:"Times New Roman",Times,serif}
 body{margin:0;background:var(--bg);color:var(--fg);font-size:17px;line-height:1.5}
 h1,h2,h3{margin:0;letter-spacing:-.01em}
-button,input,select{font-size:16px;color:var(--fg)}
+button,input,select,textarea{font-size:16px;color:var(--fg)}
 :focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .btn{border:0;background:var(--bg);border-radius:16px;padding:12px 20px;min-height:44px;cursor:pointer;box-shadow:var(--extS);transition:.3s ease-out;font-weight:700}
 .btn:hover{transform:translateY(-1px);box-shadow:var(--ext)}
 .btn:active{transform:translateY(1px);box-shadow:var(--ins)}
 .btn.red{background:var(--red);color:#fff}.btn.blk{background:#000;color:#fff}
-input,select{border:0;background:var(--bg);border-radius:16px;padding:12px 16px;min-height:44px;box-shadow:var(--ins);width:100%}
-input:focus,select:focus{box-shadow:var(--insD)}
+input,select,textarea{border:0;background:var(--bg);border-radius:16px;padding:12px 16px;min-height:44px;box-shadow:var(--ins);width:100%}
+input:focus,select:focus,textarea:focus{box-shadow:var(--insD)}
 label{display:block;font-size:14px;color:var(--mut);margin:0 0 4px 6px}
 .card{background:var(--bg);border-radius:32px;box-shadow:var(--ext);padding:28px;transition:.3s ease-out}
-.well{background:var(--bg);border-radius:16px;box-shadow:var(--insD);padding:14px}
+.well{background:var(--bg);border-radius:16px;box-shadow:var(--insD);padding:14px;font-size:14px}
 header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 32px;position:sticky;top:0;z-index:5;background:var(--bg);box-shadow:0 8px 16px rgb(163,177,198,.4)}
 .brand{display:flex;align-items:center;gap:14px}
 .logo{width:48px;height:48px;border-radius:50%;background:var(--red);box-shadow:var(--ext);display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px}
@@ -46,7 +46,24 @@ nav .btn.on{box-shadow:var(--ins);color:var(--red)}
 .item{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;margin-bottom:14px}
 .chk{display:flex;align-items:center;gap:8px}.chk input{width:22px;min-height:22px;accent-color:var(--red)}
 .hide{display:none!important}.role{padding:6px 16px;border-radius:99px;box-shadow:var(--ins);font-weight:700;color:var(--red)}
-@media(max-width:600px){header{padding:16px}.card{padding:20px}}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.ai-card{background:var(--bg);border-radius:16px;box-shadow:var(--ext);padding:16px}
+.ai-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;place-items:center;z-index:100;padding:16px}
+.ai-modal.open{display:grid}
+.ai-modal .card{max-width:900px;width:100%;height:90vh;display:flex;flex-direction:column}
+.ai-modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,.1)}
+.ai-modal-header h2{margin:0;flex:1}
+.ai-modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--mut);padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.ai-modal-close:hover{color:var(--red)}
+.ai-chat-container{flex:1;display:flex;flex-direction:column}
+#chatBoxLarge{flex:1;overflow-y:auto;background:rgba(0,0,0,.03);border-radius:12px;padding:16px;margin-bottom:12px}
+.chat-msg{padding:12px;margin:8px 0;border-radius:8px;background:var(--bg);box-shadow:var(--ins);font-size:14px}
+.chat-msg.user{background:var(--red);color:#fff;text-align:right;margin-left:60px}
+.chat-msg.ai{margin-right:60px}
+.ai-input-group{display:flex;gap:8px}
+#chatInputLarge{flex:1}
+#chatBtnLarge{flex:0}
+@media(max-width:600px){header{padding:16px}.card{padding:20px}.ai-modal .card{height:100vh;max-width:100%}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
 
@@ -91,6 +108,43 @@ nav .btn.on{box-shadow:var(--ins);color:var(--red)}
 
   <section id="tab-mine" class="hide"><h2 style="margin-bottom:20px">Mis reservas</h2><div id="mine"></div></section>
 
+  <section id="tab-ai" class="hide">
+    <h2 style="margin-bottom:20px">🤖 Asistente Inteligente</h2>
+    <div class="ai-grid">
+      <div class="card">
+        <h3>💬 Chat IA</h3>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:12px">Haz preguntas sobre salas y reservas</p>
+        <div id="chatBox" style="height:150px;overflow-y:auto;background:rgba(0,0,0,.05);border-radius:12px;padding:12px;margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px"><input id="chatInput" placeholder="Tu pregunta..."><button class="btn red" id="chatBtn" style="flex:0">Enviar</button><button class="btn" id="expandChat" style="flex:0">📱 Expandir</button></div>
+      </div>
+      <div class="card">
+        <h3>⭐ Recomendaciones</h3>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:12px">Sugerencias de salas para ti</p>
+        <button class="btn red" id="recBtn" style="width:100%;margin-bottom:12px">Obtener recomendaciones</button>
+        <div id="recBox" class="well" style="max-height:150px;overflow-y:auto;min-height:0"></div>
+      </div>
+      <div class="card">
+        <h3>📊 Predicción</h3>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:12px">Ocupación predicha</p>
+        <button class="btn red" id="predBtn" style="width:100%;margin-bottom:12px">Ver predicciones</button>
+        <div id="predBox" class="well" style="max-height:150px;overflow-y:auto;min-height:0"></div>
+      </div>
+      <div class="card">
+        <h3>🚨 Anomalías</h3>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:12px">Eventos inusuales detectados</p>
+        <button class="btn red" id="anomBtn" style="width:100%;margin-bottom:12px">Ver anomalías</button>
+        <div id="anomBox" class="well" style="max-height:150px;overflow-y:auto;min-height:0"></div>
+      </div>
+      <div class="card">
+        <h3>😊 Sentimiento</h3>
+        <p style="color:var(--mut);font-size:14px;margin-bottom:12px">Evalúa tu experiencia</p>
+        <textarea id="feedbackText" placeholder="Cuéntanos tu experiencia..." style="margin-bottom:12px;height:70px"></textarea>
+        <button class="btn red" id="sentBtn" style="width:100%">Analizar</button>
+        <div id="sentBox" class="well" style="margin-top:12px;min-height:0;display:none"></div>
+      </div>
+    </div>
+  </section>
+
   <section id="tab-admin" class="hide">
     <div class="card"><h2 id="formTitle">Agregar salón</h2>
       <div class="filters" style="margin-top:18px">
@@ -123,8 +177,24 @@ nav .btn.on{box-shadow:var(--ins);color:var(--red)}
 
 <div class="modal" id="modal"><div class="card" id="mbody"></div></div>
 
+<div class="ai-modal" id="aiModal">
+  <div class="card">
+    <div class="ai-modal-header">
+      <h2>💬 Asistente IA en Vivo</h2>
+      <button class="ai-modal-close" id="aiClose">✕</button>
+    </div>
+    <div class="ai-chat-container">
+      <div id="chatBoxLarge"></div>
+      <div class="ai-input-group">
+        <input id="chatInputLarge" placeholder="Tu pregunta..." type="text">
+        <button class="btn red" id="chatBtnLarge">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const AUTH='http://localhost:8001', CATALOG='http://localhost:8003', AVAILABILITY='http://localhost:8004', RESERVATIONS='http://localhost:8005';
+const AUTH='http://localhost:8001', CATALOG='http://localhost:8003', AVAILABILITY='http://localhost:8004', RESERVATIONS='http://localhost:8005', AI='http://localhost:8006';
 const T={sala_estudio:'Sala de estudio',aula:'Aula',laboratorio_computo:'Sala de cómputo',auditorio:'Auditorio'};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -160,16 +230,17 @@ $('logout').onclick=logout;
 function start(){
   $('loginView').classList.add('hide');$('appView').classList.remove('hide');
   $('who').textContent=user.name;$('roleTag').textContent=user.role;
-  const tabs=[['rooms','Salones disponibles'],['mine',user.role==='admin'?'Todas las reservas':'Mis reservas']];
+  const tabs=[['rooms','Salones disponibles'],['mine',user.role==='admin'?'Todas las reservas':'Mis reservas'],['ai','Asistente IA']];
   if(user.role==='admin')tabs.push(['admin','Administración']);
   $('tabs').innerHTML=tabs.map(([k,l])=>`<button class="btn" data-t="${k}">${l}</button>`).join('');
   $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>show(b.dataset.t));
   const tm=new Date(Date.now()+864e5).toISOString().slice(0,10);
   ['fd','bd'].forEach(i=>$(i).value=tm);
+  setupAI();
   show('rooms');
 }
 function show(t){
-  ['rooms','mine','admin'].forEach(k=>$('tab-'+k).classList.toggle('hide',k!==t));
+  ['rooms','mine','ai','admin'].forEach(k=>$('tab-'+k).classList.toggle('hide',k!==t));
   $('tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   if(t==='rooms')search();if(t==='mine')loadMine();if(t==='admin')loadAdmin();
 }
@@ -220,7 +291,7 @@ async function loadMine(){
   const {reservations:l}=await api(RESERVATIONS,'/reservations');
   $('mine').innerHTML=l.length?l.map(v=>`<div class="card item"><div><b>${esc(v.room_name || ('Sala #' + (v.room_id ?? '')))}</b> · ${esc(v.date)} ${esc(v.start)}–${esc(v.end)}<br>
    <span style="color:var(--mut)">${v.status==='clase'?'Clase asignada':'Reserva'} · ${esc(v.user_name || user.name)} ${esc(v.purpose)}</span></div>
-   <button class="btn" data-id="${v.id}">Cancelar</button></div>`).join(''):'<p>Aún no tienes reservas. Ve a “Salones disponibles” para crear una.</p>';
+   <button class="btn" data-id="${v.id}">Cancelar</button></div>`).join(''):'<p>Aún no tienes reservas. Ve a "Salones disponibles" para crear una.</p>';
   $('mine').querySelectorAll('button').forEach(b=>b.onclick=async()=>{if(confirm('¿Cancelar esta reserva?')){await api(RESERVATIONS,'/reservations/'+b.dataset.id,'DELETE');await syncAvailabilityData();loadMine()}});
 }
 
@@ -241,6 +312,70 @@ $('saveRoom').onclick=async()=>{
     await syncAvailabilityData();
     editing=null;$('formTitle').textContent='Agregar salón';['an','ab','ac'].forEach(i=>$(i).value='');loadAdmin()}catch(e){toast(e.message)}};
 $('blockBtn').onclick=async()=>{try{await api(RESERVATIONS,`/rooms/${$('bs').value}/block`,'POST',{date:$('bd').value,start:$('bh1').value,end:$('bh2').value,purpose:$('bp').value});await syncAvailabilityData();toast('Horario asignado');loadMine();}catch(e){toast(e.message)}};
+
+function setupAI(){
+  // Chat en modal flotante
+  $('expandChat').onclick=()=>{
+    $('aiModal').classList.add('open');
+    $('chatBoxLarge').innerHTML=$('chatBox').innerHTML;
+  };
+  $('aiClose').onclick=()=>$('aiModal').classList.remove('open');
+  $('aiModal').onclick=e=>{if(e.target===$('aiModal'))$('aiModal').classList.remove('open')};
+
+  const sendChat=async(input,box)=>{
+    const msg=input.value;
+    if(!msg)return;
+    input.value='';
+    box.innerHTML+=`<div class="chat-msg user">${esc(msg)}</div>`;
+    try{
+      const r=await api(AI,'/chat','POST',{message:msg});
+      box.innerHTML+=`<div class="chat-msg ai">${esc(r.response||'Sin respuesta')}</div>`;
+      box.scrollTop=box.scrollHeight;
+    }catch(e){toast('Error: '+e.message)}
+  };
+
+  $('chatBtn').onclick=()=>sendChat($('chatInput'),$('chatBox'));
+  $('chatInput').onkeydown=e=>{if(e.key==='Enter')$('chatBtn').click()};
+  
+  $('chatBtnLarge').onclick=()=>sendChat($('chatInputLarge'),$('chatBoxLarge'));
+  $('chatInputLarge').onkeydown=e=>{if(e.key==='Enter')$('chatBtnLarge').click()};
+
+  $('recBtn').onclick=async()=>{
+    try{
+      $('recBtn').disabled=true;
+      const r=await api(AI,'/recommend');
+      $('recBox').innerHTML=(r.recommendations||[]).map(x=>`<div>⭐ ${esc(x.name||'Sala')} - ${esc(x.reason||'Recomendada')}</div>`).join('')||'Sin recomendaciones';
+      $('recBtn').disabled=false;
+    }catch(e){toast('Error: '+e.message);$('recBtn').disabled=false}
+  };
+  $('predBtn').onclick=async()=>{
+    try{
+      $('predBtn').disabled=true;
+      const r=await api(AI,'/predict');
+      $('predBox').innerHTML=(r.predictions||[]).map(x=>`<div>📊 ${esc(x.room||'Sala')}: ${x.occupancy||0}% ocupada</div>`).join('')||'Sin predicciones';
+      $('predBtn').disabled=false;
+    }catch(e){toast('Error: '+e.message);$('predBtn').disabled=false}
+  };
+  $('anomBtn').onclick=async()=>{
+    try{
+      $('anomBtn').disabled=true;
+      const r=await api(AI,'/anomalies');
+      $('anomBox').innerHTML=(r.anomalies||[]).map(x=>`<div>🚨 ${esc(x.event||'Evento')}: ${esc(x.description||'Inusual')}</div>`).join('')||'Sin anomalías detectadas';
+      $('anomBtn').disabled=false;
+    }catch(e){toast('Error: '+e.message);$('anomBtn').disabled=false}
+  };
+  $('sentBtn').onclick=async()=>{
+    const fb=$('feedbackText').value;
+    if(!fb)return toast('Escribe tu experiencia');
+    try{
+      $('sentBtn').disabled=true;
+      const r=await api(AI,'/feedback','POST',{text:fb});
+      $('sentBox').style.display='block';
+      $('sentBox').innerHTML=`<strong>Sentimiento:</strong> ${esc(r.sentiment||'Neutral')}<br><strong>Puntuación:</strong> ${(r.score||0).toFixed(2)}`;
+      $('sentBtn').disabled=false;
+    }catch(e){toast('Error: '+e.message);$('sentBtn').disabled=false}
+  };
+}
 
 if(token&&user)start();
 </script></body></html>
