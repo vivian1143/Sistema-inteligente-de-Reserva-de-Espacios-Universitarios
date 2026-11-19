@@ -59,6 +59,25 @@ services:
     networks:
       - app-network
 
+  ai-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./ai-service:/app
+    command: php -S 0.0.0.0:8006 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+      USE_OLLAMA: "true"
+      OLLAMA_HOST: "http://host.docker.internal:11435"
+      OLLAMA_MODEL: "llama2"
+      OPENAI_API_KEY: ""
+      OPENAI_MODEL: ""
+    ports:
+      - "8006:8006"
+    networks:
+      - app-network
+
   frontend:
     image: php:8.3-cli
     working_dir: /app
@@ -74,5 +93,6 @@ services:
       - room-catalog-service
       - room-availability-service
       - reservation-service
+      - ai-service
     networks:
       - app-network

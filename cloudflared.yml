@@ -1,0 +1,40 @@
+tunnel: unillanos-tunnel
+credentials-file: /root/.cloudflared/unillanos-tunnel.json
+
+ingress:
+  # Frontend
+  - hostname: unillanos.com
+    service: http://frontend:8080
+
+  # Auth Service
+  - hostname: auth.unillanos.com
+    service: http://auth-service:8001
+    originRequest:
+      httpHostHeader: auth-service:8001
+
+  # Catalog Service
+  - hostname: catalog.unillanos.com
+    service: http://room-catalog-service:8003
+    originRequest:
+      httpHostHeader: room-catalog-service:8003
+
+  # Availability Service
+  - hostname: availability.unillanos.com
+    service: http://room-availability-service:8004
+    originRequest:
+      httpHostHeader: room-availability-service:8004
+
+  # Reservation Service
+  - hostname: reservation.unillanos.com
+    service: http://reservation-service:8005
+    originRequest:
+      httpHostHeader: reservation-service:8005
+
+  # AI Service (Chat IA)
+  - hostname: ai.unillanos.com
+    service: http://ai-service:8006
+    originRequest:
+      httpHostHeader: ai-service:8006
+
+  # Catch-all
+  - service: http_status:404

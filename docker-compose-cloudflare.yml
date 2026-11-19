@@ -1,0 +1,99 @@
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  auth-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./auth-service:/app
+    command: php -S 0.0.0.0:8001 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    ports:
+      - "8001:8001"
+    networks:
+      - app-network
+
+  room-catalog-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./room-catalog-service:/app
+    command: php -S 0.0.0.0:8003 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    ports:
+      - "8003:8003"
+    networks:
+      - app-network
+
+  room-availability-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./room-availability-service:/app
+    command: php -S 0.0.0.0:8004 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    ports:
+      - "8004:8004"
+    networks:
+      - app-network
+
+  reservation-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./reservation-service:/app
+    command: php -S 0.0.0.0:8005 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    ports:
+      - "8005:8005"
+    networks:
+      - app-network
+
+  ai-service:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./ai-service:/app
+    command: php -S 0.0.0.0:8006 index.php
+    environment:
+      JWT_SECRET: "${JWT_SECRET:-cambia-este-secreto}"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+      AZURE_OPENAI_ENDPOINT: "${AZURE_OPENAI_ENDPOINT:-}"
+      AZURE_OPENAI_API_KEY: "${AZURE_OPENAI_API_KEY:-}"
+      AZURE_LANGUAGE_ENDPOINT: "${AZURE_LANGUAGE_ENDPOINT:-}"
+      AZURE_LANGUAGE_API_KEY: "${AZURE_LANGUAGE_API_KEY:-}"
+      AZURE_ANOMALY_ENDPOINT: "${AZURE_ANOMALY_ENDPOINT:-}"
+      AZURE_ANOMALY_API_KEY: "${AZURE_ANOMALY_API_KEY:-}"
+    ports:
+      - "8006:8006"
+    networks:
+      - app-network
+
+  frontend:
+    image: php:8.3-cli
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: php -S 0.0.0.0:8080
+    environment:
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - room-catalog-service
+      - room-availability-service
+      - reservation-service
+      - ai-service
+    networks:
+      - app-network
