@@ -149,7 +149,7 @@ Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
 https://drive.google.com/file/d/1VytxCJpE06LoJnVQVq5DJLJtrfdofT9U/view?usp=sharing
 
 
-![Diagrama Arquitectura](img/Diagrama%20Arquitectura1%20.drawio.png)
+![Diagrama Arquitectura](img/Diagrama_Arquitectura.drawio.png)
 
 
 ## Ejecutar localmente
