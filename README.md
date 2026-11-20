@@ -149,7 +149,8 @@ Microservicios PHP + frontend estático. Comunicación HTTP/REST con JWT.
 https://drive.google.com/file/d/1VytxCJpE06LoJnVQVq5DJLJtrfdofT9U/view?usp=sharing
 
 
-![Diagrama Arquitectura](img/Diagrama%20Arquitectura.drawio.png)
+![Diagrama Arquitectura](img/Diagrama%20Arquitectura1.drawio.png)
+
 
 ## Ejecutar localmente
 Sin Docker (PHP 8.1+ con pdo_sqlite), tres terminales:
